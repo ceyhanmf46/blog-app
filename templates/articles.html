@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h3>Makaleler</h3>
+<hr>
+<form class="d-flex">
+    {% csrf_token %}
+    <input 
+        class="form-control me-2" 
+        type="search" 
+        name="keyword"
+        placeholder="Search..." 
+        aria-label="Search">
+    <button class="btn btn-outline-light" type="submit">
+        Search
+    </button>
+</form>
+{% if articles %}
+
+{% for article  in articles %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <header class="mb-4">
+                <a href="{% url 'article:detail' article.id %}"><h2 class="fw-bolder mb-1"> {{article.title}} </h2></a>
+                <hr>
+                <p>
+                    {{article.author.username}} Tarafindan yayinlanmistir
+                    <hr>
+                </p>
+                <div class="text-muted fst-italic mb-2">
+                    {{article.created_date}}
+                    <hr>
+                </div>
+            </header>
+            {% if article.article_image %}
+            <a href="/articles/article/{{article.id}}">
+                <figure class="mb-4">
+                <img class="img-fluid rounded"
+                     src="{{article.article_image.url}}"
+                     alt="..." />
+            </figure>
+            </a>
+            
+            
+            {% endif %}
+
+
+            <section class="mb-5">
+                {{article.content|safe| truncatewords:30}}
+            </section>
+            <a style = "float: right;" href="/articles/article/{{article.id}}" class = "btn btn-danger">Devamini Oku</a>
+        </article>
+
+        {% comment %} <!-- Comments section-->
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <form class="mb-4">
+                        <textarea class="form-control" rows="3"
+                            placeholder="Join the discussion and leave a comment!"></textarea>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div> {% endcomment %}
+
+
+
+{% endfor %}
+
+
+{% else %}
+<div class ="alert alert-danger">
+Makale Bulunamadi
+
+</div>
+
+{% endif %}
+
+{% endblock body %}
+
+
+
+

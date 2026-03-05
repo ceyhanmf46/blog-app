@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <header class="mb-4">
+                <h3 class="fw-bolder mb-1"> {{article.title}} </h3>
+                <hr>
+                <p>
+                    by {{article.author.username}}
+                    <hr>
+                </p>
+                <div class="text-muted fst-italic mb-2">
+                    {{article.created_date}}
+                    <hr>
+                </div>
+            </header>
+            {% if article.article_image %}
+            <figure class="mb-4">
+                <img class="img-fluid rounded"
+                     src="{{article.article_image.url}}"
+                     alt="..." />
+            </figure>
+            
+            {% endif %}
+
+
+            <section class="mb-5">
+                {{article.content|safe}}
+            </section>
+        </article>
+        <h4>Yorumlar</h4>
+        <hr>
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="ms-3">
+                <div class="fw-bold">
+                    {{ comment.comment_author }}
+                </div>
+
+                <div class="text-muted small mb-1">
+                    {{ comment.comment_date }}
+                </div>
+
+                <p>
+                    {{ comment.comment_content }}
+                </p>
+            </div>
+            <hr>
+            {% endfor %}
+        {% else %}
+        <div class="alert alert-danger">
+        Bu Makalede Herhangi Bir Yorum Bulunmamaktadir. Ilk yorum yapan siz olun.
+        </div>
+        {% endif %}
+
+        {% comment %} <!-- Comments section-->
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <form class="mb-4">
+                        <textarea class="form-control" rows="3"
+                            placeholder="Join the discussion and leave a comment!"></textarea>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div> {% endcomment %}
+
+ <!-- Comments section-->
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <form method = "post" action = "{% url 'article:comment' article.id %}" class="mb-4">
+                        {% csrf_token %}
+                            <div class="form-group">
+                            <label for="formGroupExampleInput">Isim</label>
+                            <input name ="comment_author" type="text" class="form-control" id="formGroupExampleInput" placeholder="Isminizi Girin">
+                        </div>
+                        <label for="formGroupExampleInput">Yorum</label>
+                        <textarea name = "comment_content" class="form-control" rows="3"
+                            placeholder=""></textarea>
+                            <button type = "submit" class ="btn btn-danger">
+                                Ekle
+                            </button>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+{% endblock body %}
+
+
+
+
